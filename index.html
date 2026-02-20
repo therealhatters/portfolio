@@ -20,97 +20,112 @@
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+    canvas#bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
     }
     .container {
       max-width: 1000px;
       margin: 0 auto;
       padding: 0 20px;
+      position: relative;
+      z-index: 1;
     }
     header {
-      padding: 4rem 0 2rem;
+      padding: 5rem 0 3rem;
       text-align: center;
       border-bottom: 1px solid var(--border);
     }
     h1 {
-      font-size: 3.2rem;
+      font-size: 3.8rem;
       color: #ffffff;
       margin-bottom: 0.5rem;
     }
     .tagline {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       color: var(--accent);
       margin-bottom: 1.5rem;
     }
+    .value-bullets {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .value-item {
+      background: rgba(88, 166, 255, 0.1);
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      font-size: 1.1rem;
+    }
     .btn {
       display: inline-block;
-      padding: 0.8rem 1.6rem;
+      padding: 1rem 2rem;
       background: var(--accent);
       color: white;
       text-decoration: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-weight: 600;
+      font-size: 1.2rem;
       transition: background 0.2s;
     }
     .btn:hover {
       background: var(--accent-dark);
     }
     section {
-      padding: 4rem 0;
+      padding: 5rem 0;
     }
     h2 {
-      font-size: 2.2rem;
-      margin-bottom: 1.5rem;
+      font-size: 2.5rem;
+      margin-bottom: 1.8rem;
       color: #ffffff;
-      border-bottom: 2px solid var(--accent);
+      border-bottom: 3px solid var(--accent);
       display: inline-block;
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.6rem;
     }
-    .card-grid {
+    .card-grid, .pricing-table {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
+      gap: 1.8rem;
     }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.8rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
-    }
-    .card h3 {
-      color: var(--accent);
-      margin-bottom: 0.8rem;
-    }
-    .card img {
-      max-width: 100%;
-      border-radius: 8px;
-      margin: 1rem 0;
-    }
-    .pricing-table {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-    .price-card {
+    .card, .price-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 2rem;
-      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    .price-card h3 {
+    .card.visible, .price-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .card:hover, .price-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.4);
+    }
+    .card h3, .price-card h3 {
       color: var(--accent);
       margin-bottom: 1rem;
     }
+    .card img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 1.2rem 0;
+    }
     .price {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       color: #ffffff;
-      margin: 1rem 0;
+      margin: 1.2rem 0;
     }
     .features {
       list-style: none;
@@ -120,97 +135,152 @@
       margin: 0.8rem 0;
       color: #8b949e;
     }
+    .tech-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1.2rem 0;
+    }
+    .badge {
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      border: 1px solid rgba(88, 166, 255, 0.3);
+    }
     .contact {
       text-align: center;
-      padding: 4rem 0;
+      padding: 5rem 0;
       background: rgba(88, 166, 255, 0.05);
       border-radius: 12px;
-      margin: 2rem 0;
+      margin: 3rem 0;
     }
     .contact a {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       color: var(--accent);
+    }
+    .testimonial-card p {
+      font-style: italic;
+      color: #c9d1d9;
+      margin-bottom: 1rem;
+    }
+    .testimonial-card p:last-child {
+      text-align: right;
+      font-style: normal;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    footer {
+      text-align: center;
+      padding: 3rem 0;
+      color: #8b949e;
+      border-top: 1px solid var(--border);
+      font-size: 0.95rem;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="container">
-      <h1>f3wv</h1>
-      <p class="tagline">Custom Discord Bot Developer • Reliable • Feature-Rich • Open for Commissions</p>
-      <a href="https://discord.com/users/YOUR_DISCORD_ID_HERE" class="btn" target="_blank">Message on Discord</a>
-    </div>
-  </header>
+  <canvas id="bg-canvas"></canvas>
 
-  <section>
-    <div class="container">
+  <div class="container">
+
+    <header>
+      <h1>f3wv</h1>
+      <p class="tagline">Custom Discord Bot Developer • Clean Code • Reliable Delivery</p>
+      <div class="value-bullets">
+        <div class="value-item">✓ Clean, documented code</div>
+        <div class="value-item">✓ Fast & on-time delivery</div>
+        <div class="value-item">✓ Secure & scalable bots</div>
+        <div class="value-item">✓ Transparent milestones</div>
+      </div>
+      <a href="https://discord.com/users/1373459559267565588" class="btn" target="_blank">Get a Free Quote</a>
+    </header>
+
+    <section>
       <h2>About</h2>
       <div class="card">
         <p>Experienced developer specializing in high-quality Discord bots using Java and Python. 2+ years in Java for robust backends and 8+ months in Python for rapid scripting and integrations.</p>
         <p>I focus on clean, maintainable code with proper error handling, database integration, and scalable architecture. All commissions include revisions, clear documentation, and milestone-based delivery.</p>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="container">
-      <h2>Skills & Tech Stack</h2>
+    <section>
+      <h2>Why Choose f3wv?</h2>
       <div class="card-grid">
         <div class="card">
-          <h3>Languages</h3>
-          <ul>
-            <li>Java (2+ years – core logic, performance)</li>
-            <li>Python (8+ months – scripting, APIs)</li>
-          </ul>
+          <h3>Modern & Reliable</h3>
+          <p>Built with current Discord API features (slash commands, buttons, modals) and tested for stability.</p>
         </div>
         <div class="card">
-          <h3>Discord Libraries</h3>
-          <ul>
-            <li>JDA (Java Discord API)</li>
-            <li>discord.py / nextcord</li>
-            <li>Slash commands, buttons, modals, embeds</li>
-          </ul>
+          <h3>Transparent Process</h3>
+          <p>Clear milestones, regular updates, and revisions included — no surprises.</p>
         </div>
         <div class="card">
-          <h3>Databases & Tools</h3>
-          <ul>
-            <li>SQLite, MongoDB</li>
-            <li>Git, Docker (basic)</li>
-            <li>API integrations (REST, webhooks)</li>
-          </ul>
+          <h3>Secure & Scalable</h3>
+          <p>Proper database usage, error handling, and rate-limit protection for large servers.</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="container">
+    <section>
+      <h2>Skills & Tech Stack</h2>
+      <div class="card">
+        <div class="tech-badges">
+          <span class="badge">Java</span>
+          <span class="badge">Python</span>
+          <span class="badge">JDA</span>
+          <span class="badge">discord.py</span>
+          <span class="badge">SQLite</span>
+          <span class="badge">MongoDB</span>
+          <span class="badge">Git</span>
+          <span class="badge">REST APIs</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
       <h2>Portfolio</h2>
       <div class="card-grid">
         <div class="card">
           <h3>Cloudy – Gambling & Economy Bot</h3>
           <p>Full casino-style economy system with slots, dice, bets, leaderboards, balanced virtual currency, admin controls, and configurable odds.</p>
           <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474190724634247270/IMG_1043.png?ex=6998f299&is=6997a119&hm=388a02ea01ea6c269159175c1ad6168fe2cd90d89d9c0e10ae0d2cb5608d8800&" alt="Cloudy commands">
-          <!-- Add video or live invite here -->
           <p><strong>Tech:</strong> Java + JDA, SQLite persistence</p>
-          <a href="#" class="btn" style="margin-top:1rem;">View Demo (coming soon)</a>
+          <a href="https://youtube.com/shorts/oBBSXC4X3vo?si=moTnsA_QpOU9s3DG" class="btn" target="_blank" style="margin-top:1rem;">Watch Demo on YouTube</a>
         </div>
 
         <div class="card">
           <h3>Storm’s Notifications – Streamer Alert Bot</h3>
           <p>Real-time notification system that pings a channel when a streamer goes live or uploads content. Customizable messages, role mentions, embeds.</p>
           <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474189950269259786/IMG_1044.png?ex=6998f1e1&is=6997a061&hm=b6063d7def0383aefb2cd4b2d7d7f9cbe92624fd26799afe14a54a4f5328da25&" alt="Storm notification">
-          <!-- Add video or live invite here -->
           <p><strong>Tech:</strong> Python + discord.py, webhook/API polling</p>
-          <a href="#" class="btn" style="margin-top:1rem;">View Demo (coming soon)</a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="container">
+    <section>
+      <h2>What Clients Say</h2>
+      <div class="card-grid">
+        <div class="card testimonial-card">
+          <p>"I used Cloudy for a while and it really helped my community as a streamer have fun in the server."</p>
+          <p>— Streamer</p>
+        </div>
+
+        <div class="card testimonial-card">
+          <p>"Cloudy is a really cool bot that I’ve seen. I’ve used other bots like 24/7 Casino but it’s really hard to understand, whereas Cloudy is simple and easy."</p>
+          <p>— Community Member</p>
+        </div>
+
+        <div class="card testimonial-card">
+          <p>"The bot is really good at the way commands are used and it looks very clean."</p>
+          <p>— Server Owner</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
       <h2>Services & Pricing</h2>
       <div class="pricing-table">
         <div class="price-card">
@@ -250,23 +320,85 @@
         Payments via crypto preferred (BTC/ETH/SOL/USDT).<br>
         PayPal also accepted for smaller projects.
       </p>
-    </div>
-  </section>
+    </section>
 
-  <section class="contact">
-    <div class="container">
-      <h2>Get in Touch</h2>
-      <p style="font-size:1.4rem; margin:1rem 0;">
-        Ready to build your custom Discord bot?<br>
-        Message me on Discord: <strong><a href="https://discord.com/users/YOUR_ID_HERE">therealhatters</a></strong>
-      </p>
-      <p style="color:#8b949e;">
-        Let's discuss your idea — quick responses, transparent process.
-      </p>
-    </div>
-  </section>
+    <section class="contact">
+      <div class="container">
+        <h2>Get in Touch</h2>
+        <p style="font-size:1.4rem; margin:1rem 0;">
+          Ready to build your custom Discord bot?<br>
+          Message me on Discord: <strong><a href="https://discord.com/users/1373459559267565588" target="_blank">therealhatters</a></strong>
+        </p>
+        <p style="color:#8b949e;">
+          Let's discuss your idea — quick responses, transparent process.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>© 2026 f3wv • <a href="https://discord.com/users/1373459559267565588" target="_blank">Discord</a></p>
+      </div>
+    </footer>
+
+  </div>
 
   <script>
+    // Animated particle background
+    const canvas = document.createElement('canvas');
+    canvas.id = 'bg-canvas';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const particleCount = 100;
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = Math.random() * 0.4 - 0.2;
+        this.speedY = Math.random() * 0.4 - 0.2;
+        this.opacity = Math.random() * 0.3 + 0.1;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = '#58a6ff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Scroll animation observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
@@ -278,7 +410,7 @@
       });
     }, { threshold: 0.15 });
 
-    document.querySelectorAll('.content-block, .project, .price-card').forEach(el => {
+    document.querySelectorAll('.card, .price-card, .contact').forEach(el => {
       observer.observe(el);
     });
   </script>
