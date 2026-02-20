@@ -2,222 +2,283 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>therealhatters | Discord Bot Developer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>f3wv • Discord Bot Developer</title>
   <style>
+    :root {
+      --bg: #0d1117;
+      --text: #c9d1d9;
+      --accent: #58a6ff;
+      --accent-dark: #388bfd;
+      --card: #161b22;
+      --border: #30363d;
+    }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      line-height: 1.5;
-      color: #d0d0ff;
-      background: #0a001f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
       min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
     }
-    canvas#bg-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
-    .content-wrapper {
-      position: relative;
-      z-index: 1;
+    header {
+      padding: 4rem 0 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
     }
-    h1, h2 {
-      margin: 1.5em 0 0.5em;
-      border-bottom: 1px solid #333366;
-      padding-bottom: 0.4em;
-      color: #00f0ff;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    h1 {
+      font-size: 3.2rem;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
     }
-    h1 { font-size: clamp(2rem, 8vw, 2.8em); letter-spacing: 1px; }
-    h2 { color: #ff00cc; text-shadow: 0 0 8px rgba(255, 0, 204, 0.4); font-size: clamp(1.6rem, 6vw, 2em); }
-    a { color: #00d4ff; text-decoration: none; }
-    a:hover { text-decoration: underline; text-shadow: 0 0 6px #00d4ff; }
-    .section { margin: 2em 0; }
-    .content-block, .project {
-      margin: 1.8em 0;
-      padding: 1.2em;
-      border: 1px solid #333366;
-      border-radius: 10px;
-      background: rgba(10, 5, 30, 0.75);
-      backdrop-filter: blur(6px);
-      opacity: 0;
-      transform: translateY(60px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    .tagline {
+      font-size: 1.3rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
     }
-    .content-block.visible, .project.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.6rem;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.2s;
     }
-    img.gif {
+    .btn:hover {
+      background: var(--accent-dark);
+    }
+    section {
+      padding: 4rem 0;
+    }
+    h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+      padding-bottom: 0.5rem;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.8rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+    }
+    .card h3 {
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+    .card img {
       max-width: 100%;
-      height: auto;
       border-radius: 8px;
-      margin: 1em 0;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
-      display: block;
+      margin: 1rem 0;
     }
-    ul { padding-left: 1.4em; margin: 0.5em 0; }
-    li { margin-bottom: 0.5em; }
-    strong, .important { color: #ff00cc; text-shadow: 0 0 6px rgba(255, 0, 204, 0.6); }
+    .pricing-table {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+    .price-card h3 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .price {
+      font-size: 2.5rem;
+      color: #ffffff;
+      margin: 1rem 0;
+    }
+    .features {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+    .features li {
+      margin: 0.8rem 0;
+      color: #8b949e;
+    }
+    .contact {
+      text-align: center;
+      padding: 4rem 0;
+      background: rgba(88, 166, 255, 0.05);
+      border-radius: 12px;
+      margin: 2rem 0;
+    }
+    .contact a {
+      font-size: 1.4rem;
+      color: var(--accent);
+    }
   </style>
 </head>
 <body>
 
-  <canvas id="bg-canvas"></canvas>
-
-  <div class="content-wrapper">
-
-    <h1>therealhatters</h1>
-
-    <div class="content-block">
-      <p><strong>Custom Discord Bot Developer • Open for Commissions</strong></p>
-      <p>Building solid bots with Java (2+ years experience) and Python (8+ months). Focus on gambling/economy, notifications, utilities, and fun features.</p>
+  <header>
+    <div class="container">
+      <h1>f3wv</h1>
+      <p class="tagline">Custom Discord Bot Developer • Reliable • Feature-Rich • Open for Commissions</p>
+      <a href="https://discord.com/users/YOUR_DISCORD_ID_HERE" class="btn" target="_blank">Message on Discord</a>
     </div>
+  </header>
 
-    <div class="content-block">
-      <strong>Contact:</strong> therealhatters on Discord<br>
-      DMs open • Commissions starting at $2<br>
-      Payments via crypto (preferred) • Revisions included
-    </div>
-
-    <div class="section">
-      <h2>Stats & Experience</h2>
-      <div class="content-block">
-        <ul>
-          <li>2+ years in Java – strong for scalable, performant bot cores</li>
-          <li>8+ months in Python – great for fast prototyping, APIs, and scripts</li>
-          <li>Real bots delivered: Cloudy (gambling) & Storm’s Notifications</li>
-          <li>Specialties: Gambling systems, real-time alerts, clean configurable code</li>
-        </ul>
+  <section>
+    <div class="container">
+      <h2>About</h2>
+      <div class="card">
+        <p>Experienced developer specializing in high-quality Discord bots using Java and Python. 2+ years in Java for robust backends and 8+ months in Python for rapid scripting and integrations.</p>
+        <p>I focus on clean, maintainable code with proper error handling, database integration, and scalable architecture. All commissions include revisions, clear documentation, and milestone-based delivery.</p>
       </div>
     </div>
+  </section>
 
-    <div class="section">
-      <h2>Capabilities</h2>
-      <div class="content-block">
-        <ul>
-          <li>Gambling / Casino bots (slots, bets, dice, leaderboards, balanced economy)</li>
-          <li>Notification systems (streamer live/upload pings, events, webhooks)</li>
-          <li>Economy & currency mechanics</li>
-          <li>Moderation, logging, fun commands</li>
-          <li>Database handling (SQLite/MongoDB)</li>
-          <li>Slash commands, buttons, rich embeds</li>
-          <li>Custom integrations (APIs, timers, etc.)</li>
-        </ul>
+  <section>
+    <div class="container">
+      <h2>Skills & Tech Stack</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Languages</h3>
+          <ul>
+            <li>Java (2+ years – core logic, performance)</li>
+            <li>Python (8+ months – scripting, APIs)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Discord Libraries</h3>
+          <ul>
+            <li>JDA (Java Discord API)</li>
+            <li>discord.py / nextcord</li>
+            <li>Slash commands, buttons, modals, embeds</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Databases & Tools</h3>
+          <ul>
+            <li>SQLite, MongoDB</li>
+            <li>Git, Docker (basic)</li>
+            <li>API integrations (REST, webhooks)</li>
+          </ul>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="section">
-      <h2>Showcase / Projects</h2>
+  <section>
+    <div class="container">
+      <h2>Portfolio</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Cloudy – Gambling & Economy Bot</h3>
+          <p>Full casino-style economy system with slots, dice, bets, leaderboards, balanced virtual currency, admin controls, and configurable odds.</p>
+          <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474190724634247270/IMG_1043.png?ex=6998f299&is=6997a119&hm=388a02ea01ea6c269159175c1ad6168fe2cd90d89d9c0e10ae0d2cb5608d8800&" alt="Cloudy commands">
+          <!-- Add video or live invite here -->
+          <p><strong>Tech:</strong> Java + JDA, SQLite persistence</p>
+          <a href="#" class="btn" style="margin-top:1rem;">View Demo (coming soon)</a>
+        </div>
 
-      <div class="project">
-        <h3>Cloudy - Gambling Bot</h3>
-        <p>Feature-packed gambling bot with casino games, virtual bets, leaderboards, and fair mechanics. Built for community fun and engagement.</p>
-        <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474190724634247270/IMG_1043.png?ex=6998f299&is=6997a119&hm=388a02ea01ea6c269159175c1ad6168fe2cd90d89d9c0e10ae0d2cb5608d8800&" alt="Cloudy gambling demo" class="gif">
-        <p>Tech: Java core for logic & persistence, configurable odds/cooldowns/admin tools.</p>
-      </div>
-
-      <div class="project">
-        <h3>Storm’s Notifications</h3>
-        <p>Real-time bot that sends channel pings when "Storm" goes live or uploads new content. Ideal for fan/creator servers with embeds and mentions.</p>
-        <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474189950269259786/IMG_1044.png?ex=6998f1e1&is=6997a061&hm=b6063d7def0383aefb2cd4b2d7d7f9cbe92624fd26799afe14a54a4f5328da25&" alt="Storm’s Notifications demo" class="gif">
-        <p>Tech: Python for easy polling/webhooks, customizable messages/roles/filters.</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Pricing / Packages (Rough Guide)</h2>
-      <div class="content-block">
-        <ul>
-          <li><strong>Basic:</strong> Simple commands, notifications, or quick tweaks — $2–$5</li>
-          <li><strong>Mid:</strong> Economy basics, alerts with custom logic, or small features — $6–$12</li>
-          <li><strong>Advanced:</strong> Full gambling system, DB integration, complex mechanics — $13–$20</li>
-          <li><strong>Add-ons:</strong> Extra revisions, rush delivery (priced case-by-case)</li>
-        </ul>
-        <p>Prices depend on exact features & scope — super affordable for quick customs. Payments via crypto (preferred – BTC/ETH/SOL/USDT/etc., confirm wallet). <strong>50% upfront via milestones</strong>. Discounts for testimonials or repeat clients. Clear ToS.</p>
+        <div class="card">
+          <h3>Storm’s Notifications – Streamer Alert Bot</h3>
+          <p>Real-time notification system that pings a channel when a streamer goes live or uploads content. Customizable messages, role mentions, embeds.</p>
+          <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474189950269259786/IMG_1044.png?ex=6998f1e1&is=6997a061&hm=b6063d7def0383aefb2cd4b2d7d7f9cbe92624fd26799afe14a54a4f5328da25&" alt="Storm notification">
+          <!-- Add video or live invite here -->
+          <p><strong>Tech:</strong> Python + discord.py, webhook/API polling</p>
+          <a href="#" class="btn" style="margin-top:1rem;">View Demo (coming soon)</a>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="content-block">
-      Got an idea for a bot? DM me: <strong>therealhatters</strong> on Discord<br>
-      Fast replies, no funny business – let's build it.
+  <section>
+    <div class="container">
+      <h2>Services & Pricing</h2>
+      <div class="pricing-table">
+        <div class="price-card">
+          <h3>Basic Bot</h3>
+          <div class="price">$30–$60</div>
+          <ul class="features">
+            <li>Simple commands & embeds</li>
+            <li>Basic moderation / utility</li>
+            <li>1–2 revisions</li>
+            <li>Delivery in 3–7 days</li>
+          </ul>
+        </div>
+
+        <div class="price-card">
+          <h3>Standard Bot</h3>
+          <div class="price">$80–$150</div>
+          <ul class="features">
+            <li>Economy / leveling / notifications</li>
+            <li>Database integration</li>
+            <li>Custom embeds & buttons</li>
+            <li>3 revisions + documentation</li>
+          </ul>
+        </div>
+
+        <div class="price-card">
+          <h3>Advanced / Custom</h3>
+          <div class="price">$200+</div>
+          <ul class="features">
+            <li>Complex logic, APIs, dashboards</li>
+            <li>Full custom features</li>
+            <li>Milestone payments</li>
+            <li>Ongoing support available</li>
+          </ul>
+        </div>
+      </div>
+      <p style="text-align:center; margin-top:2rem; color:#8b949e;">
+        Payments via crypto preferred (BTC/ETH/SOL/USDT).<br>
+        PayPal also accepted for smaller projects.
+      </p>
     </div>
+  </section>
 
-  </div>
+  <section class="contact">
+    <div class="container">
+      <h2>Get in Touch</h2>
+      <p style="font-size:1.4rem; margin:1rem 0;">
+        Ready to build your custom Discord bot?<br>
+        Message me on Discord: <strong><a href="https://discord.com/users/YOUR_ID_HERE">therealhatters</a></strong>
+      </p>
+      <p style="color:#8b949e;">
+        Let's discuss your idea — quick responses, transparent process.
+      </p>
+    </div>
+  </section>
 
   <script>
-    // Animated particle background
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
-
-    const particles = [];
-    const particleCount = 80;
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.opacity = Math.random() * 0.3 + 0.1;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-      }
-      draw() {
-        ctx.globalAlpha = this.opacity;
-        ctx.fillStyle = '#00f0ff';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    // Scroll animation observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
           setTimeout(() => {
             entry.target.classList.add('visible');
-          }, index * 100);
+          }, index * 150);
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
+    }, { threshold: 0.15 });
 
-    document.querySelectorAll('.content-block, .project').forEach(el => {
+    document.querySelectorAll('.content-block, .project, .price-card').forEach(el => {
       observer.observe(el);
     });
   </script>
