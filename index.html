@@ -85,12 +85,6 @@
       opacity: 0;
       visibility: hidden;
     }
-    #overlay span {
-      font-size: clamp(1.2rem, 5vw, 1.8rem);
-      margin-top: 1rem;
-      color: #ff00cc;
-      text-shadow: 0 0 10px #ff00cc;
-    }
 
     #main-content {
       opacity: 0;
@@ -157,7 +151,6 @@
 
   <div id="overlay">
     click to enter...
-    <span>therealhatters</span>
   </div>
 
   <div id="main-content">
@@ -279,10 +272,13 @@
       }
     });
 
-    volumeSlider.addEventListener('input', () => {
+    const updateVolume = () => {
       audio.volume = parseFloat(volumeSlider.value);
-    });
+    };
+    volumeSlider.addEventListener('input', updateVolume);
+    volumeSlider.addEventListener('change', updateVolume);
 
+    const observer = document.createElement('script');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
