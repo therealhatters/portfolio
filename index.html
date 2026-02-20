@@ -104,33 +104,57 @@
       pointer-events: auto;
     }
 
-    #music-toggle {
+    #audio-controls {
       position: fixed;
       bottom: 16px;
       right: 16px;
       z-index: 10000;
       background: rgba(10, 5, 30, 0.8);
       border: 1px solid #00f0ff;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
+      border-radius: 12px;
+      padding: 8px 12px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
+      gap: 10px;
       box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
       transition: all 0.3s;
-      font-size: 1.4rem;
-      color: #00f0ff;
     }
-    #music-toggle:hover { transform: scale(1.1); }
+    #audio-controls:hover { transform: scale(1.05); }
+    #play-pause-btn {
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: #00f0ff;
+      cursor: pointer;
+      text-shadow: 0 0 6px #00f0ff;
+      padding: 0;
+    }
+    #volume-slider {
+      width: 100px;
+      accent-color: #00f0ff;
+      background: #333366;
+      border-radius: 8px;
+      height: 6px;
+      outline: none;
+      cursor: pointer;
+    }
+    #volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #00f0ff;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 8px #00f0ff;
+    }
   </style>
 </head>
 <body>
 
   <div id="overlay">
     click to enter...
-    <span>therealhatters</span>
   </div>
 
   <div id="main-content">
@@ -214,21 +238,22 @@
   </div>
 
   <audio id="bg-music" loop preload="auto">
-    <!-- REPLACE THE LINE BELOW WITH YOUR MUSIC FILE URL -->
-    <!-- Example: <source src="https://cdn.discordapp.com/attachments/.../yourtrack.mp3" type="audio/mpeg"> -->
-    <source src="https://cdn.discordapp.com/attachments/1455271553657999484/1474213931760226395/Trippie_Redd_Diplo_-_Wish_mp3.pm.mp3?ex=69990836&is=6997b6b6&hm=808638a3315780c7533de7e5f6c35ba4ef735537b8fcbffaff2749c90da1525b&" type="audio/mpeg">
+    <source src="https://cdn.discordapp.com/attachments/1455271553657999484/1474218562171441358/ohpalmusic-80s-neon-synthwave-beat-f-minor-90bpm-loop-176800.mp3?ex=69990c86&is=6997bb06&hm=85f9bfd0c8cd0a1b6841eddd02eb7dbf9a87135028f52dbfcfc79dfc6c97b107&" type="audio/mpeg">
   </audio>
 
-  <div id="music-toggle" title="Toggle Music">
-    <span id="music-icon">♪</span>
+  <div id="audio-controls">
+    <button id="play-pause-btn">▶</button>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
   </div>
 
   <script>
     const overlay = document.getElementById('overlay');
     const mainContent = document.getElementById('main-content');
     const audio = document.getElementById('bg-music');
-    const musicToggle = document.getElementById('music-toggle');
-    const musicIcon = document.getElementById('music-icon');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const volumeSlider = document.getElementById('volume-slider');
+
+    audio.volume = 0.5;
 
     const revealPage = () => {
       overlay.classList.add('hidden');
@@ -241,15 +266,18 @@
     document.addEventListener('click', revealPage, { once: true });
     document.addEventListener('touchstart', revealPage, { once: true });
 
-    musicToggle.addEventListener('click', () => {
-      if (audio.paused || audio.muted) {
-        audio.muted = false;
+    playPauseBtn.addEventListener('click', () => {
+      if (audio.paused) {
         audio.play();
-        musicIcon.textContent = '♪';
+        playPauseBtn.textContent = '⏸';
       } else {
         audio.pause();
-        musicIcon.textContent = '🔇';
+        playPauseBtn.textContent = '▶';
       }
+    });
+
+    volumeSlider.addEventListener('input', () => {
+      audio.volume = volumeSlider.value;
     });
 
     const observer = new IntersectionObserver((entries) => {
