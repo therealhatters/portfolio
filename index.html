@@ -13,16 +13,20 @@
       padding: 20px;
       line-height: 1.5;
       color: #d0d0ff;
-      background: linear-gradient(-45deg, #0a001f, #000814, #0f001a, #0a001f);
-      background-size: 400% 400%;
-      animation: gradient 25s ease infinite;
+      background: #0a001f;
       min-height: 100vh;
-      touch-action: manipulation;
+      overflow-x: hidden;
+      position: relative;
     }
-    @keyframes gradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    canvas#bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
     }
     h1, h2 {
       margin: 1.5em 0 0.5em;
@@ -41,7 +45,8 @@
       padding: 1.2em;
       border: 1px solid #333366;
       border-radius: 10px;
-      background: rgba(10, 5, 30, 0.6);
+      background: rgba(10, 5, 30, 0.75);
+      backdrop-filter: blur(6px);
       opacity: 0;
       transform: translateY(60px);
       transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -61,98 +66,13 @@
     ul { padding-left: 1.4em; margin: 0.5em 0; }
     li { margin-bottom: 0.5em; }
     strong, .important { color: #ff00cc; text-shadow: 0 0 6px rgba(255, 0, 204, 0.6); }
-
-    #overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #00f0ff;
-      font-size: clamp(2.2rem, 10vw, 3.5rem);
-      font-weight: bold;
-      text-shadow: 0 0 15px #00f0ff;
-      cursor: pointer;
-      transition: opacity 1s ease, visibility 1s ease;
-      user-select: none;
-      touch-action: manipulation;
-    }
-    #overlay.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    #main-content {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 1.2s ease 0.3s, transform 1.2s ease 0.3s;
-      pointer-events: none;
-    }
-    #main-content.revealed {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    #audio-controls {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      z-index: 10000;
-      background: rgba(10, 5, 30, 0.8);
-      border: 1px solid #00f0ff;
-      border-radius: 12px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
-      transition: all 0.3s;
-    }
-    #audio-controls:hover { transform: scale(1.05); }
-    #play-pause-btn {
-      width: 32px;
-      height: 32px;
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #00f0ff;
-      cursor: pointer;
-      text-shadow: 0 0 6px #00f0ff;
-      padding: 0;
-      line-height: 1;
-    }
-    #volume-slider {
-      width: 100px;
-      accent-color: #00f0ff;
-      background: #333366;
-      border-radius: 8px;
-      height: 6px;
-      outline: none;
-      cursor: pointer;
-    }
-    #volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      background: #00f0ff;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 0 8px #00f0ff;
-    }
   </style>
 </head>
 <body>
 
-  <div id="overlay">
-    click to enter...
-  </div>
+  <canvas id="bg-canvas"></canvas>
 
-  <div id="main-content">
+  <div class="content-wrapper">
 
     <h1>therealhatters</h1>
 
@@ -232,54 +152,60 @@
 
   </div>
 
-  <audio id="bg-music" loop preload="auto">
-    <source src="https://cdn.discordapp.com/attachments/1455271553657999484/1474218562171441358/ohpalmusic-80s-neon-synthwave-beat-f-minor-90bpm-loop-176800.mp3?ex=69990c86&is=6997bb06&hm=85f9bfd0c8cd0a1b6841eddd02eb7dbf9a87135028f52dbfcfc79dfc6c97b107&" type="audio/mpeg">
-  </audio>
-
-  <div id="audio-controls">
-    <button id="play-pause-btn">Play</button>
-    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
-  </div>
-
   <script>
-    const overlay = document.getElementById('overlay');
-    const mainContent = document.getElementById('main-content');
-    const audio = document.getElementById('bg-music');
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const volumeSlider = document.getElementById('volume-slider');
+    // Animated particle background
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    audio.volume = 0.5;
-
-    const revealPage = (e) => {
-      e.preventDefault();
-      overlay.classList.add('hidden');
-      mainContent.classList.add('revealed');
-      audio.play().then(() => {
-        playPauseBtn.textContent = 'Pause';
-      }).catch(() => {});
-      document.removeEventListener('click', revealPage);
-      document.removeEventListener('touchstart', revealPage);
-    };
-
-    document.addEventListener('click', revealPage, { once: true });
-    document.addEventListener('touchstart', revealPage, { once: true });
-
-    playPauseBtn.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play();
-        playPauseBtn.textContent = 'Pause';
-      } else {
-        audio.pause();
-        playPauseBtn.textContent = 'Play';
-      }
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
 
-    const updateVolume = () => {
-      audio.volume = parseFloat(volumeSlider.value);
-    };
-    volumeSlider.addEventListener('input', updateVolume);
-    volumeSlider.addEventListener('change', updateVolume);
+    const particles = [];
+    const particleCount = 80;
 
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.3 + 0.1;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = '#00f0ff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Scroll animation observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
