@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>therealhatters | Discord Bot Developer</title>
   <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: system-ui, -apple-system, sans-serif;
       max-width: 800px;
       margin: 0 auto;
-      padding: 40px 20px;
-      line-height: 1.6;
-      color: #d0d0ff; /* soft purple-tinted off-white for main text */
+      padding: 20px;
+      line-height: 1.5;
+      color: #d0d0ff;
       background: linear-gradient(-45deg, #0a001f, #000814, #0f001a, #0a001f);
       background-size: 400% 400%;
-      animation: gradient 25s ease infinite; /* slightly slower for calm tech feel */
+      animation: gradient 25s ease infinite;
       min-height: 100vh;
+      touch-action: manipulation;
     }
     @keyframes gradient {
       0% { background-position: 0% 50%; }
@@ -23,153 +25,243 @@
       100% { background-position: 0% 50%; }
     }
     h1, h2 {
-      margin-top: 2em;
-      border-bottom: 1px solid #333366; /* subtle purple-gray border */
-      padding-bottom: 0.5em;
-      color: #00f0ff; /* neon cyan for headings */
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); /* soft glow */
+      margin: 1.5em 0 0.5em;
+      border-bottom: 1px solid #333366;
+      padding-bottom: 0.4em;
+      color: #00f0ff;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
-    h1 { font-size: 2.8em; margin-top: 0; letter-spacing: 1px; }
-    h2 { color: #ff00cc; text-shadow: 0 0 8px rgba(255, 0, 204, 0.4); } /* neon magenta for subheads */
+    h1 { font-size: clamp(2rem, 8vw, 2.8em); letter-spacing: 1px; }
+    h2 { color: #ff00cc; text-shadow: 0 0 8px rgba(255, 0, 204, 0.4); font-size: clamp(1.6rem, 6vw, 2em); }
     a { color: #00d4ff; text-decoration: none; }
     a:hover { text-decoration: underline; text-shadow: 0 0 6px #00d4ff; }
-    .section { margin-bottom: 3em; }
-    .content-block {
-      margin-bottom: 2.5em;
-      padding: 1.2em;
-      border: 1px solid #333366;
-      border-radius: 10px;
-      background: rgba(10, 5, 30, 0.6); /* deeper, more opaque dark overlay */
-      opacity: 0;
-      transform: translateY(80px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    .content-block.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .project {
-      margin-bottom: 2.5em;
+    .section { margin: 2em 0; }
+    .content-block, .project {
+      margin: 1.8em 0;
       padding: 1.2em;
       border: 1px solid #333366;
       border-radius: 10px;
       background: rgba(10, 5, 30, 0.6);
       opacity: 0;
-      transform: translateY(80px);
-      transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+      transform: translateY(60px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    .project.visible {
+    .content-block.visible, .project.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    strong, .important {
-      color: #ff00cc; /* neon magenta for emphasis */
-      text-shadow: 0 0 6px rgba(255, 0, 204, 0.6);
-    }
     img.gif {
       max-width: 100%;
+      height: auto;
       border-radius: 8px;
       margin: 1em 0;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); /* cyan glow shadow */
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+      display: block;
     }
-    ul { padding-left: 1.5em; margin: 0.5em 0; }
-    li { margin-bottom: 0.6em; }
+    ul { padding-left: 1.4em; margin: 0.5em 0; }
+    li { margin-bottom: 0.5em; }
+    strong, .important { color: #ff00cc; text-shadow: 0 0 6px rgba(255, 0, 204, 0.6); }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #00f0ff;
+      font-size: clamp(2.2rem, 10vw, 3.5rem);
+      font-weight: bold;
+      text-shadow: 0 0 15px #00f0ff;
+      cursor: pointer;
+      transition: opacity 1s ease, visibility 1s ease;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    #overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    #overlay span {
+      font-size: clamp(1.2rem, 5vw, 1.8rem);
+      margin-top: 1rem;
+      color: #ff00cc;
+      text-shadow: 0 0 10px #ff00cc;
+    }
+
+    #main-content {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1.2s ease 0.3s, transform 1.2s ease 0.3s;
+      pointer-events: none;
+    }
+    #main-content.revealed {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    #music-toggle {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 10000;
+      background: rgba(10, 5, 30, 0.8);
+      border: 1px solid #00f0ff;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+      transition: all 0.3s;
+      font-size: 1.4rem;
+      color: #00f0ff;
+    }
+    #music-toggle:hover { transform: scale(1.1); }
   </style>
 </head>
 <body>
 
-  <h1>therealhatters</h1>
-
-  <div class="content-block">
-    <p><strong>Custom Discord Bot Developer • Open for Commissions</strong></p>
-    <p>Building solid bots with Java (2+ years experience) and Python (8+ months). Focus on gambling/economy, notifications, utilities, and fun features.</p>
+  <div id="overlay">
+    click to enter...
+    <span>therealhatters</span>
   </div>
 
-  <div class="content-block">
-    <strong>Contact:</strong> therealhatters on Discord<br>
-    DMs open • Commissions starting at $2<br>
-    Payments via crypto (preferred) • Revisions included
-  </div>
+  <div id="main-content">
 
-  <div class="section">
-    <h2>Stats & Experience</h2>
+    <h1>therealhatters</h1>
+
     <div class="content-block">
-      <ul>
-        <li>2+ years in Java – strong for scalable, performant bot cores</li>
-        <li>8+ months in Python – great for fast prototyping, APIs, and scripts</li>
-        <li>Real bots delivered: Cloudy (gambling) & Storm’s Notifications</li>
-        <li>Specialties: Gambling systems, real-time alerts, clean configurable code</li>
-      </ul>
+      <p><strong>Custom Discord Bot Developer • Open for Commissions</strong></p>
+      <p>Building solid bots with Java (2+ years experience) and Python (8+ months). Focus on gambling/economy, notifications, utilities, and fun features.</p>
     </div>
-  </div>
 
-  <div class="section">
-    <h2>Capabilities</h2>
     <div class="content-block">
-      <ul>
-        <li>Gambling / Casino bots (slots, bets, dice, leaderboards, balanced economy)</li>
-        <li>Notification systems (streamer live/upload pings, events, webhooks)</li>
-        <li>Economy & currency mechanics</li>
-        <li>Moderation, logging, fun commands</li>
-        <li>Database handling (SQLite/MongoDB)</li>
-        <li>Slash commands, buttons, rich embeds</li>
-        <li>Custom integrations (APIs, timers, etc.)</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>Showcase / Projects</h2>
-
-    <div class="project">
-      <h3>Cloudy - Gambling Bot</h3>
-      <p>Feature-packed gambling bot with casino games, virtual bets, leaderboards, and fair mechanics. Built for community fun and engagement.</p>
-      <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474190724634247270/IMG_1043.png?ex=6998f299&is=6997a119&hm=388a02ea01ea6c269159175c1ad6168fe2cd90d89d9c0e10ae0d2cb5608d8800&" alt="Cloudy gambling demo" class="gif">
-      <p>Tech: Java core for logic & persistence, configurable odds/cooldowns/admin tools.</p>
+      <strong>Contact:</strong> therealhatters on Discord<br>
+      DMs open • Commissions starting at $2<br>
+      Payments via crypto (preferred) • Revisions included
     </div>
 
-    <div class="project">
-      <h3>Storm’s Notifications</h3>
-      <p>Real-time bot that sends channel pings when "Storm" goes live or uploads new content. Ideal for fan/creator servers with embeds and mentions.</p>
-      <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474189950269259786/IMG_1044.png?ex=6998f1e1&is=6997a061&hm=b6063d7def0383aefb2cd4b2d7d7f9cbe92624fd26799afe14a54a4f5328da25&" alt="Storm’s Notifications demo" class="gif">
-      <p>Tech: Python for easy polling/webhooks, customizable messages/roles/filters.</p>
+    <div class="section">
+      <h2>Stats & Experience</h2>
+      <div class="content-block">
+        <ul>
+          <li>2+ years in Java – strong for scalable, performant bot cores</li>
+          <li>8+ months in Python – great for fast prototyping, APIs, and scripts</li>
+          <li>Real bots delivered: Cloudy (gambling) & Storm’s Notifications</li>
+          <li>Specialties: Gambling systems, real-time alerts, clean configurable code</li>
+        </ul>
+      </div>
     </div>
 
-  </div>
+    <div class="section">
+      <h2>Capabilities</h2>
+      <div class="content-block">
+        <ul>
+          <li>Gambling / Casino bots (slots, bets, dice, leaderboards, balanced economy)</li>
+          <li>Notification systems (streamer live/upload pings, events, webhooks)</li>
+          <li>Economy & currency mechanics</li>
+          <li>Moderation, logging, fun commands</li>
+          <li>Database handling (SQLite/MongoDB)</li>
+          <li>Slash commands, buttons, rich embeds</li>
+          <li>Custom integrations (APIs, timers, etc.)</li>
+        </ul>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>Pricing / Packages (Rough Guide)</h2>
+    <div class="section">
+      <h2>Showcase / Projects</h2>
+
+      <div class="project">
+        <h3>Cloudy - Gambling Bot</h3>
+        <p>Feature-packed gambling bot with casino games, virtual bets, leaderboards, and fair mechanics. Built for community fun and engagement.</p>
+        <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474190724634247270/IMG_1043.png?ex=6998f299&is=6997a119&hm=388a02ea01ea6c269159175c1ad6168fe2cd90d89d9c0e10ae0d2cb5608d8800&" alt="Cloudy gambling demo" class="gif">
+        <p>Tech: Java core for logic & persistence, configurable odds/cooldowns/admin tools.</p>
+      </div>
+
+      <div class="project">
+        <h3>Storm’s Notifications</h3>
+        <p>Real-time bot that sends channel pings when "Storm" goes live or uploads new content. Ideal for fan/creator servers with embeds and mentions.</p>
+        <img src="https://cdn.discordapp.com/attachments/1455271553657999484/1474189950269259786/IMG_1044.png?ex=6998f1e1&is=6997a061&hm=b6063d7def0383aefb2cd4b2d7d7f9cbe92624fd26799afe14a54a4f5328da25&" alt="Storm’s Notifications demo" class="gif">
+        <p>Tech: Python for easy polling/webhooks, customizable messages/roles/filters.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Pricing / Packages (Rough Guide)</h2>
+      <div class="content-block">
+        <ul>
+          <li><strong>Basic:</strong> Simple commands, notifications, or quick tweaks — $2–$5</li>
+          <li><strong>Mid:</strong> Economy basics, alerts with custom logic, or small features — $6–$12</li>
+          <li><strong>Advanced:</strong> Full gambling system, DB integration, complex mechanics — $13–$20</li>
+          <li><strong>Add-ons:</strong> Extra revisions, rush delivery (priced case-by-case)</li>
+        </ul>
+        <p>Prices depend on exact features & scope — super affordable for quick customs. Payments via crypto (preferred – BTC/ETH/SOL/USDT/etc., confirm wallet). <strong>50% upfront via milestones</strong>. Discounts for testimonials or repeat clients. Clear ToS.</p>
+      </div>
+    </div>
+
     <div class="content-block">
-      <ul>
-        <li><strong>Basic:</strong> Simple commands, notifications, or quick tweaks — $2–$5</li>
-        <li><strong>Mid:</strong> Economy basics, alerts with custom logic, or small features — $6–$12</li>
-        <li><strong>Advanced:</strong> Full gambling system, DB integration, complex mechanics — $13–$20</li>
-        <li><strong>Add-ons:</strong> Extra revisions, rush delivery (priced case-by-case)</li>
-      </ul>
-      <p>Prices depend on exact features & scope — super affordable for quick customs. Payments via crypto (preferred – BTC/ETH/SOL/USDT/etc., confirm wallet). <strong>50% upfront via milestones</strong>. Discounts for testimonials or repeat clients. Clear ToS.</p>
+      Got an idea for a bot? DM me: <strong>therealhatters</strong> on Discord<br>
+      Fast replies, no funny business – let's build it.
     </div>
+
   </div>
 
-  <div class="content-block">
-    Got an idea for a bot? DM me: <strong>therealhatters</strong> on Discord<br>
-    Fast replies, no funny business – let's build it.
+  <audio id="bg-music" loop preload="auto">
+    <!-- REPLACE THE LINE BELOW WITH YOUR MUSIC FILE URL -->
+    <!-- Example: <source src="https://cdn.discordapp.com/attachments/.../yourtrack.mp3" type="audio/mpeg"> -->
+    <source src="https://cdn.discordapp.com/attachments/1455271553657999484/1474213931760226395/Trippie_Redd_Diplo_-_Wish_mp3.pm.mp3?ex=69990836&is=6997b6b6&hm=808638a3315780c7533de7e5f6c35ba4ef735537b8fcbffaff2749c90da1525b&" type="audio/mpeg">
+  </audio>
+
+  <div id="music-toggle" title="Toggle Music">
+    <span id="music-icon">♪</span>
   </div>
 
-  <!-- Scroll animation script -->
   <script>
+    const overlay = document.getElementById('overlay');
+    const mainContent = document.getElementById('main-content');
+    const audio = document.getElementById('bg-music');
+    const musicToggle = document.getElementById('music-toggle');
+    const musicIcon = document.getElementById('music-icon');
+
+    const revealPage = () => {
+      overlay.classList.add('hidden');
+      mainContent.classList.add('revealed');
+      audio.play().catch(() => {});
+      document.removeEventListener('click', revealPage);
+      document.removeEventListener('touchstart', revealPage);
+    };
+
+    document.addEventListener('click', revealPage, { once: true });
+    document.addEventListener('touchstart', revealPage, { once: true });
+
+    musicToggle.addEventListener('click', () => {
+      if (audio.paused || audio.muted) {
+        audio.muted = false;
+        audio.play();
+        musicIcon.textContent = '♪';
+      } else {
+        audio.pause();
+        musicIcon.textContent = '🔇';
+      }
+    });
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
           setTimeout(() => {
             entry.target.classList.add('visible');
-          }, index * 120); // slightly longer stagger for techy reveal
+          }, index * 100);
           observer.unobserve(entry.target);
         }
       });
-    }, {
-      threshold: 0.15,
-      rootMargin: "0px 0px -10% 0px"
-    });
+    }, { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
 
     document.querySelectorAll('.content-block, .project').forEach(el => {
       observer.observe(el);
