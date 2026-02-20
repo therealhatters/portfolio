@@ -125,11 +125,13 @@
       height: 32px;
       background: none;
       border: none;
-      font-size: 1.6rem;
+      font-size: 1.2rem;
+      font-weight: bold;
       color: #00f0ff;
       cursor: pointer;
       text-shadow: 0 0 6px #00f0ff;
       padding: 0;
+      line-height: 1;
     }
     #volume-slider {
       width: 100px;
@@ -155,6 +157,7 @@
 
   <div id="overlay">
     click to enter...
+    <span>therealhatters</span>
   </div>
 
   <div id="main-content">
@@ -242,7 +245,7 @@
   </audio>
 
   <div id="audio-controls">
-    <button id="play-pause-btn">▶</button>
+    <button id="play-pause-btn">Play</button>
     <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
   </div>
 
@@ -269,15 +272,15 @@
     playPauseBtn.addEventListener('click', () => {
       if (audio.paused) {
         audio.play();
-        playPauseBtn.textContent = '⏸';
+        playPauseBtn.textContent = 'Pause';
       } else {
         audio.pause();
-        playPauseBtn.textContent = '▶';
+        playPauseBtn.textContent = 'Play';
       }
     });
 
     volumeSlider.addEventListener('input', () => {
-      audio.volume = volumeSlider.value;
+      audio.volume = parseFloat(volumeSlider.value);
     });
 
     const observer = new IntersectionObserver((entries) => {
